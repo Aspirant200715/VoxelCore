@@ -4,8 +4,9 @@ export class Entity {
     this.y = y;
     this.width = width;
     this.height = height;
-    this.tag = tag;
+    this.tag = "entity";
     this.alive = true;
+    this.solid = false; // for collision purposes
   }
 
   update(dt) {}
