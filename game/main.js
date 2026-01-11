@@ -1,10 +1,21 @@
-import { GameEngine } from "../engine/core/GameEngine.js";
-import { TestScene } from "./TestScene.js";
-import { Keyboard } from "../engine/input/Keyboard.js";
-
-Keyboard.init();
+import { TestScene } from "./game/TestScene.js";
 
 const canvas = document.getElementById("gameCanvas");
-const engine = new GameEngine(canvas);
+const ctx = canvas.getContext("2d");
 
-engine.setScene(new TestScene());
+let lastTime = 0;
+const scene = new TestScene();
+
+function gameLoop(time) {
+  const dt = (time - lastTime) / 1000;
+  lastTime = time;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  scene.update(dt);
+  scene.render(ctx);
+
+  requestAnimationFrame(gameLoop);
+}
+
+requestAnimationFrame(gameLoop);

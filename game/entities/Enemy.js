@@ -8,15 +8,26 @@ export class Enemy extends Entity {
     this.alive = true;
     this.hitThisAttack = false;
     this.hp = 3; 
+    this.vx = 0;
+    this.direction = 0;
   }
 
   takeDamage(amount) {
     this.hp -= amount;
+    this.vx = 300 * this.direction;
     if (this.hp <= 0) {
       this.alive = false;
       console.log("Enemy HP:", this.hp);
     }
   }
+update(dt) {
+  this.x += this.vx * dt;
+  this.vx *= 0.9;
+
+  if (Math.abs(this.vx) < 1) this.vx = 0;
+}
+
+
 
   render(ctx) {
     ctx.fillStyle = "blue";

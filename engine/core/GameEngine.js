@@ -28,7 +28,7 @@ export class GameEngine {
 
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    // console.log("rendering");
+    console.log("rendering");
     if (this.scene){
         this.scene.render(this.ctx)
     }

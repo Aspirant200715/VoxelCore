@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VoxelCore</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>2D Game Engine Project</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <script type="module" src="./game/main.js"></script>
-    
+
+  <div class="app">
+    <header>
+      <h1>2D Game Engine</h1>
+      <p>Custom JavaScript Engine with Combat, AI & Collision</p>
+    </header>
+
+    <main>
+      <div class="game-container">
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
+      </div>
+
+      <aside class="info">
+        <h2>Controls</h2>
+        <ul>
+          <li><b>← →</b> Move</li>
+          <li><b>Space</b> Attack</li>
+        </ul>
+
+        <h2>Engine Features</h2>
+        <ul>
+          <li>Entity System</li>
+          <li>Collision Detection</li>
+          <li>Combat & Hitboxes</li>
+          <li>Enemy AI</li>
+          <li>Health System</li>
+        </ul>
+      </aside>
+    </main>
+
+    <footer>
+      <span>Project by Your Name</span>
+    </footer>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
 </body>
 </html>

@@ -1,25 +1,25 @@
-export class World{
-    constructor (){
-        this.entities= [];
-    }
-add(entity) {
+export class World {
+  constructor() {
+    this.entities = [];
+  }
+
+  add(entity) {
     this.entities.push(entity);
   }
 
-update(dt) {
-  for (const entity of this.entities) {
-    if (entity.alive) {
-      entity.update(dt);
+  update(dt, player) {
+    for (const e of this.entities) {
+      if (e.alive && e.update) {
+        e.update(dt, player);
+      }
     }
+
+    this.entities = this.entities.filter(e => e.alive !== false);//used to remove dead entities
   }
 
-  this.entities = this.entities.filter(e => e.alive !== false);  //used in removing the dead players
-}
-
-
-render(ctx) {
-    for (const entity of this.entities) {
-      entity.render(ctx);
+  render(ctx) {
+    for (const e of this.entities) {
+      e.render(ctx);
     }
   }
 }
