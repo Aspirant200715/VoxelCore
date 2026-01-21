@@ -2,20 +2,24 @@ export class World {
   constructor() {
     this.entities = [];
   }
-
   add(entity) {
     this.entities.push(entity);
   }
 
   update(dt, player) {
-    for (const e of this.entities) {
-      if (e.alive && e.update) {
-        e.update(dt, player);
-      }
-    }
+  for (const entity of this.entities) {
+    if (!entity.update) continue;
 
-    this.entities = this.entities.filter(e => e.alive !== false);//used to remove dead entities
+    if (entity.update.length === 2) {
+      entity.update(dt, player);
+    } else {
+      entity.update(dt);
+    }
   }
+
+  // REMOVE DEAD ENTITIES
+  this.entities = this.entities.filter(e => e.alive !== false);
+}
 
   render(ctx) {
     for (const e of this.entities) {

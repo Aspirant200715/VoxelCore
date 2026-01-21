@@ -1,14 +1,13 @@
 export class AISystem {
   static update(player, entities, dt) {
     for (const e of entities) {
-      if (e.tag !== "enemy") continue;
-      if (!e.alive) continue;
+      if (e.tag !== "enemy"|| !e.alive) continue;
 
-      // simple follow AI
-      const speed = 60;
+      const speed = 80;
       const distance = player.x - e.x;
+      const stopDistance = 60; 
 
-      if (Math.abs(distance) > 5) {
+      if (Math.abs(distance) > stopDistance) {
         e.x += Math.sign(distance) * speed * dt;
       }
     }
