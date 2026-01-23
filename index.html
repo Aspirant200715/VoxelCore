@@ -1,122 +1,167 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>VoxelCore</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VoxelCore</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Montserrat:wght@400;700;900&family=Bangers&family=Bungee&family=Righteous&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<body>
+  <body>
+    <div class="app">
+      <!-- HEADER -->
+      <header>
+        <h1>MARIO RUN</h1>
+        <p>Custom JavaScript Engine with Combat, AI & Collision</p>
+      </header>
 
-  <div class="app">
+      <!-- MAIN UI LAYOUT (NON-FULLSCREEN PART) -->
+      <main id="mainLayout">
+        <!-- INSTRUCTIONS PANEL - LEFT SIDE -->
+        <aside class="info boxed fancy">
+          <h2>Controls</h2>
+          <ul>
+            <li><b>← →</b> Move</li>
+            <li><b>↑ / W</b> Jump</li>
+            <li><b>Space</b> Attack</li>
+            <li><b>P</b> Pause the game</li>
+          </ul>
 
-    <!-- HEADER -->
-    <header>
-      <h1>MARIO RUN</h1>
-      <p>Custom JavaScript Engine with Combat, AI & Collision</p>
-    </header>
+          <h2>Engine Features</h2>
+          <ul>
+            <li>Entity System</li>
+            <li>Collision Detection</li>
+            <li>Combat & Hitboxes</li>
+            <li>Enemy AI</li>
+            <li>Health System</li>
+          </ul>
+        </aside>
 
-    <!-- MAIN UI LAYOUT (NON-FULLSCREEN PART) -->
-    <main id="mainLayout">
+        <!-- GAME FULLSCREEN LAYER - CENTERED -->
+        <div id="game-fullscreen-layer" class="game-center">
+          <div class="game-container">
+            <div class="game-wrapper large">
+              <canvas
+                id="gameCanvas"
+                width="2000"
+                height="1200"
+                tabindex="0"
+              ></canvas>
 
-      <!-- GAME FULLSCREEN LAYER (ONLY GAME GOES HERE) -->
-      <div id="game-fullscreen-layer">
-        <div class="game-container">
-          <div class="game-wrapper large">
-            <canvas id="gameCanvas" width="1960" height="1480" tabindex="0"></canvas>
-             <div id="gameOverUI">
-            <h1>Game Over</h1>
-                  <button id="backBtn">Back</button>
-                   </div>
-            <!-- MENU OVERLAY -->
-            <div id="ui-overlay" class="menu-screen">
-              <div class="menu-content">
-                <h1 class="game-title">RUN MARIO RUN</h1>
+              <!-- SCORE HUD (updated dynamically) -->
+              <div id="scoreHUD" class="score-hud">
+                <div class="score-label">Score</div>
+                <div id="scoreValue" class="score-value">0</div>
+              </div>
 
-                <h3>CHOOSE YOUR HERO</h3>
-                <div class="char-select">
+              <!-- FINAL CARD (top-left, shown on game over) -->
+              <div id="finalCard" class="final-card" style="display: none">
+                <div class="final-label">FINAL</div>
+                <div id="finalCardValue" class="final-value">0</div>
+              </div>
 
-                  <div class="char-option selected" id="char-warrior"
-                       onclick="selectChar('warrior')">
-                    <div class="char-preview">
-                      <img src="giphy.gif" alt="Marshall Running">
-                    </div>
-                    <span>MARSHALL</span>
-                  </div>
-
-                  <div class="char-option" id="char-scout"
-                       onclick="selectChar('scout')">
-                    <div class="char-preview">
-                      <img src="d514bdd5cebd67d90fb502fadc64d1d0.gif" alt="Mccalow Running">
-                    </div>
-                    <span>HACOBIN</span>
-                  </div>
-                </div>
-                <div class="menu-buttons">
-                  <button class="btn-main" id="startBtn">PLAY</button>
+              <!-- PAUSE OVERLAY -->
+              <div id="pauseUI" class="overlay-ui" style="display: none">
+                <div class="pause-box">
+                      PAUSED
+                  <div class="pause-instruction">Press <b>P</b> to resume</div>
                 </div>
               </div>
-            </div>
-            <!-- END MENU OVERLAY -->
 
+              <!-- GAME OVER OVERLAY -->
+              <div id="gameOverUI">
+                <h1>Game Over</h1>
+                <p>Final Score: <strong id="finalScore">0</strong></p>
+                <div class="gameover-buttons">
+                  <button id="backBtn">Back</button>
+                </div>
+              </div>
+              <!-- MENU OVERLAY -->
+              <div id="ui-overlay" class="menu-screen">
+                <div class="menu-content">
+                  <h1 class="game-title">RUN MARIO RUN</h1>
+
+                  <h3>CHOOSE YOUR HERO</h3>
+                  <div class="char-select">
+                    <div
+                      class="char-option selected"
+                      id="char-warrior"
+                      onclick="selectChar('warrior')"
+                    >
+                      <div class="char-preview">
+                        <img src="giphy.gif" alt="Marshall Running" />
+                      </div>
+                      <span>MARSHALL</span>
+                    </div>
+
+                    <div
+                      class="char-option"
+                      id="char-scout"
+                      onclick="selectChar('scout')"
+                    >
+                      <div class="char-preview">
+                        <img
+                          src="d514bdd5cebd67d90fb502fadc64d1d0.gif"
+                          alt="Hacobin Running"
+                        />
+                      </div>
+                      <span>HACOBIN</span>
+                    </div>
+                  </div>
+                  <div class="menu-buttons">
+                    <button class="btn-main" id="startBtn">PLAY</button>
+                  </div>
+                </div>
+              </div>
+              <!-- END MENU OVERLAY -->
+            </div>
           </div>
         </div>
-      </div>
-      <!-- END GAME FULLSCREEN LAYER -->
+        <!-- END GAME FULLSCREEN LAYER -->
 
-      <!-- ENEMY SELECT -->
-      <div class="enemy-select">
-        <h3>ENEMIES</h3>
-        <select id="enemyCount">
-          <option value="2">2 (Easy)</option>
-          <option value="4" selected>4 (Normal)</option>
-          <option value="6">6 (Hard)</option>
-          <option value="8">8 (Insane)</option>
-        </select>
-      </div>
+        <!-- ENEMY SELECT - RIGHT SIDE -->
+        <div class="enemy-select-panel">
+          <h3>ENEMIES</h3>
+          <select id="enemyCount">
+            <option value="2">2 (Easy)</option>
+            <option value="4" selected>4 (Normal)</option>
+            <option value="6">6 (Hard)</option>
+            <option value="8">8 (Insane)</option>
+          </select>
+        </div>
+      </main>
 
-      <!-- INFO PANEL -->
-      <aside class="info boxed fancy">
-        <h2>Controls</h2>
-        <ul>
-          <li><b>← →</b> Move</li>
-          <li><b>↑ / W</b> Jump</li>
-          <li><b>Space</b> Attack</li>
-        </ul>
+      <!-- FOOTER -->
+      <footer>
+        <span>VoxelCore</span>
+      </footer>
+    </div>
 
-        <h2>Engine Features</h2>
-        <ul>
-          <li>Entity System</li>
-          <li>Collision Detection</li>
-          <li>Combat & Hitboxes</li>
-          <li>Enemy AI</li>
-          <li>Health System</li>
-        </ul>
-      </aside>
+    <!-- GAME LOGIC -->
+    <script type="module" src="./game/main.js"></script>
 
-    </main>
+    <!-- UI LOGIC -->
+    <script>
+      window.selectedHero = "warrior";
 
-    <!-- FOOTER -->
-    <footer>
-      <span>VoxelCore</span>
-    </footer>
-
-  </div>
-
-  <!-- GAME LOGIC -->
-  <script type="module" src="./game/main.js"></script>
-
-  <!-- UI LOGIC -->
-  <script>
-    window.selectedHero = "warrior";
-
-    window.selectChar = (type) => {
-      window.selectedHero = type;
-      document.querySelectorAll(".char-option")
-        .forEach(el => el.classList.remove("selected"));
-      document.getElementById("char-" + type).classList.add("selected");
-    };
-  </script>
-
-</body>
+      window.selectChar = (type) => {
+        window.selectedHero = type;
+        document
+          .querySelectorAll(".char-option")
+          .forEach((el) => el.classList.remove("selected"));
+        document.getElementById("char-" + type).classList.add("selected");
+        // Play select SFX when choosing hero (if available)
+        try {
+          if (typeof window !== "undefined" && window.sfxSelect) {
+            const s = window.sfxSelect.cloneNode();
+            s.play().catch(() => {});
+          }
+        } catch (e) {}
+      };
+    </script>
+  </body>
 </html>
