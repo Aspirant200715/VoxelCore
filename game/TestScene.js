@@ -149,7 +149,7 @@ export class TestScene extends Scene {
     this.lives = 3;
     this.levelWidth = 12000;
     this.levelEndX = this.levelWidth - 200;
-//clouds
+    //clouds
     this.world.add(new Cloud(100, 50, 20, this.levelWidth));
     this.world.add(new Cloud(400, 80, 15, this.levelWidth));
     this.world.add(new Cloud(700, 40, 25, this.levelWidth));
@@ -197,7 +197,7 @@ export class TestScene extends Scene {
       this.world.add(new Brick(x + 400, HIGH, 120, 30));
       this.world.add(new Brick(x + 600, MID, 120, 30));
     }
-//enemy position handling 
+    //enemy position handling
     const enemyCount = window.enemyCount || 4;
     const enemyPositions = [
       { x: 420, y: LOW - 40 },
@@ -315,6 +315,12 @@ export class TestScene extends Scene {
       this.deathTimer -= dt;
       if (this.deathTimer <= 0) {
         this.lives--;
+        try {
+          if (typeof window !== "undefined" && window.sfxLifeLost) {
+            window.sfxLifeLost.currentTime = 0;
+            window.sfxLifeLost.play().catch(() => {});
+          }
+        } catch (e) {}
         if (typeof window !== "undefined" && window.updateLives) {
           window.updateLives(this.lives, 3);
         }

@@ -82,6 +82,7 @@ const bgMusic = new Audio("cottagecore-17463.mp3");
 bgMusic.loop = true;
 bgMusic.volume = 0.5;
 bgMusic.preload = "auto";
+window.sfxLifeLost = new Audio("negative_beeps-6008.mp3");
 let musicUserEnabled = false;
 
 const musicBtn = document.createElement("button");
