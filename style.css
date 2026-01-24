@@ -52,7 +52,7 @@ body {
   overflow: hidden;
 }
 
-/* HEADER */
+
 header {
   text-align: center;
   margin-bottom: 12px;
@@ -83,7 +83,6 @@ header p {
   margin-top: 8px;
 }
 
-/* MAIN LAYOUT */
 main {
   background: #C6C6C6;
   color: #3f3f3f;
@@ -105,7 +104,7 @@ main {
   /* overflow: hidden; */
 }
 
-/* GAME FRAME - CENTERED */
+
 .game-center {
   width: 100%;
   max-width: 100%;
@@ -155,7 +154,7 @@ main {
   box-shadow: none;
 }
 
-/* Override padding-bottom when aspect-ratio is supported */
+
 @supports (aspect-ratio: 1) {
   .game-wrapper {
     padding-bottom: 0;
@@ -163,7 +162,7 @@ main {
   }
 }
 
-/* keep canvas at its native drawing size so coordinates match visuals */
+
 #gameCanvas {
   outline: none;
   display: block;
@@ -174,15 +173,15 @@ main {
   left: 0;
   object-fit: contain;
   image-rendering: pixelated;
-  /* Maintain aspect ratio while fitting */
+  
 }
 
-/* ensure the title uses the game font we added */
+
 .game-title {
   font-family: 'VT323', monospace;
 }
 
-/* MENU OVERLAY */
+
 .menu-screen {
   position: absolute;
   inset: 0;
@@ -206,7 +205,7 @@ main {
   box-sizing: border-box;
 }
 
-/* TITLE */
+
 .game-title {
   font-family: 'VT323', monospace;
   font-size: clamp(90px, 14vw, 180px);
@@ -221,7 +220,7 @@ main {
   letter-spacing: 4px;
 }
 
-/* CHOOSE YOUR HERO TEXT */
+
 .menu-content h3 {
   font-family: 'VT323', monospace;
   font-size: clamp(32px, 4vw, 56px);
@@ -234,7 +233,7 @@ main {
   text-transform: uppercase;
 }
 
-/* CHARACTER SELECTION */
+
 .char-select {
   display: flex;
   gap: 30px;
@@ -278,7 +277,7 @@ main {
 
 
 
-/* BUTTONS */
+
 .menu-buttons {
   display: flex;
   flex-direction: column;
@@ -322,7 +321,7 @@ main {
   cursor: pointer;
 }
 
-/* SIDEBAR - LEFT SIDE */
+
 .info {
   width: 100%;
   max-width: 300px;
@@ -352,7 +351,7 @@ main {
   line-height: 1.5;
 }
 
-/* FOOTER */
+
 footer {
   text-align: center;
   margin-top: 20px;
@@ -377,7 +376,7 @@ footer {
   height: 100px;
   image-rendering: pixelated;
   object-fit: contain;
-  /* 🔥 for retro sprites */
+
 }
 
 
@@ -391,7 +390,7 @@ footer {
 
 }
 
-/* ENEMY SELECT - RIGHT SIDE PANEL */
+
 .enemy-select-panel {
   grid-column: 3;
   width: 100%;
@@ -460,7 +459,7 @@ footer {
   background: #399cd6;
 }
 
-/* Scale game nicely in fullscreen */
+
 #game-fullscreen-layer:fullscreen .game-wrapper {
   width: min(100vw, calc(100vh * 2000 / 1200));
   height: min(100vh, calc(100vw * 1200 / 2000));
@@ -474,7 +473,7 @@ footer {
   height: 100%;
 }
 
-/* Remove card look in fullscreen */
+
 #game-fullscreen-layer:fullscreen .game-container {
   border-radius: 0;
   box-shadow: none;
@@ -499,7 +498,7 @@ footer {
   cursor: pointer;
 }
 
-/* Score HUD styles */
+
 .score-hud,
 #scoreHUD {
   position: absolute;
@@ -533,7 +532,7 @@ footer {
   font-size: 32px;
 }
 
-/* small pulse effect for score updates */
+
 .pulse {
   animation: pulse 220ms ease-in-out;
 }
@@ -552,7 +551,7 @@ footer {
   }
 }
 
-/* floating +points popup */
+
 .score-popup {
   position: absolute;
   left: 8px;
@@ -574,7 +573,6 @@ footer {
   opacity: 1;
 }
 
-/* floating sparkle for popup */
 .score-popup::after {
   content: "";
   position: absolute;
@@ -588,12 +586,10 @@ footer {
   transform: scale(0.8);
 }
 
-/* Menu/outside score card - HIDDEN */
 .menu-score {
   display: none !important;
 }
 
-/* Full-screen pause overlay */
 #pauseUI {
   position: absolute;
   inset: 0;
@@ -638,7 +634,6 @@ footer {
   margin: 0;
 }
 
-/* Game Over fancy styling */
 #gameOverUI {
   position: absolute;
   inset: 0;
@@ -715,7 +710,6 @@ footer {
   }
 }
 
-/* Final top-left card shown on Game Over */
 .final-card {
   position: absolute;
   top: 18px;
@@ -768,7 +762,6 @@ footer {
   }
 }
 
-/* Game-like menu + UI polish */
 :root {
   --accent-1: #ff7a00;
   --accent-2: #ffd84d;
@@ -913,7 +906,7 @@ body {
   font-weight: 800;
 }
 
-/* make game-wrapper more game-like */
+
 .game-wrapper {
   border-radius: 0;
   padding: 14px;
@@ -926,7 +919,6 @@ body {
   overflow: hidden;
 }
 
-/* score-hud tweaks */
 #scoreHUD {
   left: 18px;
   top: 18px;
@@ -939,128 +931,12 @@ body {
   color: #fff;
 }
 
-/* interactive hover for char options */
 .char-option:hover {
   transform: none;
   background: #999;
 }
 
-/* Menu score removed */
 
-/* responsive adjustments for narrower screens */
-@media (max-width: 980px) {
-  .menu-screen .menu-content {
-    padding: 28px;
-  }
-
-  .game-title {
-    font-size: 40px;
-  }
-
-  .char-option {
-    width: 140px;
-    height: 180px;
-  }
-
-  .char-option .char-preview {
-    width: 90px;
-    height: 90px;
-  }
-
-  .char-option .char-preview img {
-    width: 80px;
-    height: 80px;
-  }
-
-  .btn-main {
-    padding: 18px 50px;
-    font-size: 24px;
-  }
-
-  main {
-    padding: 12px 20px;
-    gap: 20px;
-  }
-
-  .game-container {
-    padding: 15px;
-  }
-
-  .info {
-    width: 220px;
-    font-size: 14px;
-  }
-}
-
-/* Ensure game wrapper doesn't exceed viewport
-@media (max-width: 1800px) {
-  .game-wrapper {
-    max-width: 100%;
-  }
-
-  .game-container {
-    max-width: 100%;
-  }
-} */
-
-/* Responsive layout
-@media (max-width: 1200px) {
-  main {
-    grid-template-columns: 260px 1fr 240px;
-    gap: 16px;
-    padding: 16px;
-  }
-
-  .info {
-    max-width: 260px;
-  }
-
-  .enemy-select-panel {
-    max-width: 300px;
-  }
-} */
-
-/* @media (max-width: 900px) {
-  main {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    gap: 16px;
-  }
-
-  .info {
-    grid-column: 1;
-    max-width: 100%;
-    justify-self: center;
-  }
-
-  .game-center {
-    grid-column: 1;
-  }
-
-  .enemy-select-panel {
-    grid-column: 1;
-    max-width: 100%;
-    justify-self: center;
-  }
-} */
-
-/* Better layout for larger screens
-@media (min-width: 1400px) {
-  main {
-    grid-template-columns: 340px 1.2fr 300px;
-    max-height: calc(100vh - 100px);
-  }
-
-  .info {
-    max-width: 340px;
-  }
-
-  .enemy-select-panel {
-    max-width: 300px;
-  }
-} */
-
-/* Make sure score HUD is always visible */
 .score-hud,
 #scoreHUD {
   position: absolute;
@@ -1084,7 +960,7 @@ body {
 }
 
 
-/* shine effect used on score HUD when added */
+
 .score-hud.shine {
   animation: shine 520ms ease;
 }
@@ -1105,7 +981,7 @@ body {
   }
 }
 
-/* Hearts UI */
+
 .hearts-container {
   position: absolute;
   top: 12px;
