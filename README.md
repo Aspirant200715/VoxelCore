@@ -1,4 +1,4 @@
-Somario- Web Dev End Term Project
+🚀 SOMARIO – Web Development End Term Project
 
 A custom 2D game engine and platformer game built from scratch using vanilla JavaScript, HTML5 Canvas, and CSS3. This project demonstrates a modular Entity-Component-System (ECS) architecture, custom physics, and state management without relying on external game libraries.
 
