@@ -19,7 +19,6 @@ export class MovementSystem {
         player.prevY + player.height <= other.y + 2;
 
       if (!wasAboveLastFrame && overlapX < overlapY) {
-        // Horizontal collision: push the player exactly outside the object
         if (player.x < other.x) {
           // Player is to the left -> move left
           player.x = other.x - player.width;
@@ -27,9 +26,7 @@ export class MovementSystem {
           // Player is to the right -> move right
           player.x = other.x + other.width;
         }
-        // Note: do not modify player.speed here; input will control movement next frame.
       } else {
-        // Vertical collision or player was above last frame: handle landing/head hit
         // Only land if we are NOT moving upwards (jumping)
         if (player.vy >= 0 && (player.vy > 0 || wasAboveLastFrame)) {
           // Player is falling onto the object

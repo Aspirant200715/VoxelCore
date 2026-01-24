@@ -52,7 +52,6 @@ body {
   overflow: hidden;
 }
 
-/* HEADER */
 header {
   text-align: center;
   margin-bottom: 12px;
@@ -83,17 +82,16 @@ header p {
   margin-top: 8px;
 }
 
-/* MAIN LAYOUT */
 main {
   background: #C6C6C6;
   color: #3f3f3f;
   border: 4px solid #000;
   box-shadow: inset 4px 4px #fff, inset -4px -4px #555;
   border-radius: 0;
-  padding: 16px;
+  padding: 8px;
   font-size: 30px;
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr) 220px;
+  grid-template-columns: 300px minmax(0, 1fr) 280px;
 
   gap: 10px;
   align-items: center;
@@ -101,11 +99,8 @@ main {
   max-width: 100%;
   box-sizing: border-box;
   justify-items: center;
-  /* max-height: calc(101vh - 120px); */
-  /* overflow: hidden; */
 }
 
-/* GAME FRAME - CENTERED */
 .game-center {
   width: 100%;
   max-width: 100%;
@@ -116,17 +111,17 @@ main {
 }
 
 .game-container {
-  background: #000;
-  padding: 12px;
+  background: transparent;
+  padding: 0;
   border-radius: 0;
-  border: 4px solid #000;
+  border: none;
   box-shadow: none;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   width: 100%;
-  max-width: 89%;
+  max-width: 100%;
 }
 
 :fullscreen .game-container {
@@ -145,9 +140,7 @@ main {
   max-width: 100%;
   height: auto;
   padding-bottom: 0;
-  /* 1200/2000 = 60% maintains aspect ratio (fallback) */
   aspect-ratio: 2000 / 1200;
-  /* Maintain 2000:1200 aspect ratio (modern browsers) */
   border-radius: 0;
   overflow: hidden;
   background: #87CEEB;
@@ -155,7 +148,6 @@ main {
   box-shadow: none;
 }
 
-/* Override padding-bottom when aspect-ratio is supported */
 @supports (aspect-ratio: 1) {
   .game-wrapper {
     padding-bottom: 0;
@@ -163,7 +155,6 @@ main {
   }
 }
 
-/* keep canvas at its native drawing size so coordinates match visuals */
 #gameCanvas {
   outline: none;
   display: block;
@@ -174,15 +165,12 @@ main {
   left: 0;
   object-fit: contain;
   image-rendering: pixelated;
-  /* Maintain aspect ratio while fitting */
 }
 
-/* ensure the title uses the game font we added */
 .game-title {
   font-family: 'VT323', monospace;
 }
 
-/* MENU OVERLAY */
 .menu-screen {
   position: absolute;
   inset: 0;
@@ -206,7 +194,6 @@ main {
   box-sizing: border-box;
 }
 
-/* TITLE */
 .game-title {
   font-family: 'VT323', monospace;
   font-size: clamp(90px, 14vw, 180px);
@@ -221,7 +208,6 @@ main {
   letter-spacing: 4px;
 }
 
-/* CHOOSE YOUR HERO TEXT */
 .menu-content h3 {
   font-family: 'VT323', monospace;
   font-size: clamp(32px, 4vw, 56px);
@@ -234,7 +220,6 @@ main {
   text-transform: uppercase;
 }
 
-/* CHARACTER SELECTION */
 .char-select {
   display: flex;
   gap: 30px;
@@ -278,7 +263,6 @@ main {
 
 
 
-/* BUTTONS */
 .menu-buttons {
   display: flex;
   flex-direction: column;
@@ -322,10 +306,9 @@ main {
   cursor: pointer;
 }
 
-/* SIDEBAR - LEFT SIDE */
 .info {
   width: 100%;
-  max-width: 240px;
+  max-width: 300px;
   font-family: 'VT323', monospace;
   grid-column: 1;
   font-size: 24px;
@@ -352,7 +335,6 @@ main {
   line-height: 1.5;
 }
 
-/* FOOTER */
 footer {
   text-align: center;
   margin-top: 20px;
@@ -377,7 +359,6 @@ footer {
   height: 100px;
   image-rendering: pixelated;
   object-fit: contain;
-  /* 🔥 for retro sprites */
 }
 
 
@@ -391,11 +372,10 @@ footer {
 
 }
 
-/* ENEMY SELECT - RIGHT SIDE PANEL */
 .enemy-select-panel {
   grid-column: 3;
   width: 100%;
-  max-width: 240px;
+  max-width: 280px;
   background: #8b8b8b;
   border-radius: 0;
   padding: 24px;
@@ -417,8 +397,8 @@ footer {
 
 .enemy-select-panel select {
   width: 100%;
-  padding: 16px 24px;
-  font-size: 17px;
+  padding: 22px 30px;
+  font-size: 24px;
   border-radius: 0;
   border: 2px solid #000;
   font-weight: 800;
@@ -460,13 +440,12 @@ footer {
   background: #399cd6;
 }
 
-/* Scale game nicely in fullscreen */
 #game-fullscreen-layer:fullscreen .game-wrapper {
-  width: min(90vw, 1650px);
-  height: min(90vh, 1000px);
-  aspect-ratio: 1650 / 1000;
-  max-width: 1650px;
-  max-height: 1000px;
+  width: min(100vw, calc(100vh * 2000 / 1200));
+  height: min(100vh, calc(100vw * 1200 / 2000));
+  aspect-ratio: 2000 / 1200;
+  max-width: none;
+  max-height: none;
 }
 
 #game-fullscreen-layer:fullscreen #gameCanvas {
@@ -474,7 +453,6 @@ footer {
   height: 100%;
 }
 
-/* Remove card look in fullscreen */
 #game-fullscreen-layer:fullscreen .game-container {
   border-radius: 0;
   box-shadow: none;
@@ -499,7 +477,6 @@ footer {
   cursor: pointer;
 }
 
-/* Score HUD styles */
 .score-hud,
 #scoreHUD {
   position: absolute;
@@ -533,7 +510,6 @@ footer {
   font-size: 32px;
 }
 
-/* small pulse effect for score updates */
 .pulse {
   animation: pulse 220ms ease-in-out;
 }
@@ -552,7 +528,6 @@ footer {
   }
 }
 
-/* floating +points popup */
 .score-popup {
   position: absolute;
   left: 8px;
@@ -574,7 +549,6 @@ footer {
   opacity: 1;
 }
 
-/* floating sparkle for popup */
 .score-popup::after {
   content: "";
   position: absolute;
@@ -588,12 +562,10 @@ footer {
   transform: scale(0.8);
 }
 
-/* Menu/outside score card - HIDDEN */
 .menu-score {
   display: none !important;
 }
 
-/* Full-screen pause overlay */
 #pauseUI {
   position: absolute;
   inset: 0;
@@ -621,7 +593,7 @@ footer {
 
 .pause-box h2 {
   font-family: 'VT323', monospace;
-  font-size: 64px;
+  font-size: 120px;
   margin: 0;
   text-shadow: 4px 4px #000;
   letter-spacing: 4px;
@@ -631,14 +603,13 @@ footer {
 
 .pause-instruction {
   font-family: 'VT323', monospace;
-  font-size: 24px;
+  font-size: 48px;
   color: #fff;
   text-shadow: 2px 2px #000;
   opacity: 1;
   margin: 0;
 }
 
-/* Game Over fancy styling */
 #gameOverUI {
   position: absolute;
   inset: 0;
@@ -653,7 +624,7 @@ footer {
 }
 
 #gameOverUI h1 {
-  font-size: 64px;
+  font-size: 140px;
   margin: 0 0 8px 0;
   letter-spacing: 2px;
   text-shadow: 4px 4px #000;
@@ -662,15 +633,15 @@ footer {
 }
 
 #gameOverUI p {
-  font-size: 20px;
+  font-size: 48px;
   margin: 0 0 18px 0;
   opacity: 0.95;
 }
 
 .gameover-buttons button {
-  padding: 12px 22px;
-  font-size: 18px;
-  margin: 6px;
+  padding: 24px 60px;
+  font-size: 48px;
+  margin: 12px;
   border-radius: 0;
   cursor: pointer;
   background: #7d7d7d;
@@ -683,6 +654,24 @@ footer {
   text-shadow: 2px 2px #000;
   font-weight: 400;
   box-shadow: none;
+  font-family: 'VT323', monospace;
+  transition: all 0.15s ease;
+}
+
+.gameover-buttons button:hover {
+  background: #999;
+  transform: scale(1.1);
+  color: #fff;
+  border-color: #fff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.gameover-buttons button:active {
+  transform: scale(0.95);
+  border-top-color: #5b5b5b;
+  border-left-color: #5b5b5b;
+  border-right-color: #dbdbdb;
+  border-bottom-color: #dbdbdb;
 }
 
 @keyframes popIn {
@@ -697,7 +686,6 @@ footer {
   }
 }
 
-/* Final top-left card shown on Game Over */
 .final-card {
   position: absolute;
   top: 18px;
@@ -750,7 +738,6 @@ footer {
   }
 }
 
-/* Game-like menu + UI polish */
 :root {
   --accent-1: #ff7a00;
   --accent-2: #ffd84d;
@@ -895,7 +882,6 @@ body {
   font-weight: 800;
 }
 
-/* make game-wrapper more game-like */
 .game-wrapper {
   border-radius: 0;
   padding: 14px;
@@ -908,7 +894,6 @@ body {
   overflow: hidden;
 }
 
-/* score-hud tweaks */
 #scoreHUD {
   left: 18px;
   top: 18px;
@@ -921,15 +906,11 @@ body {
   color: #fff;
 }
 
-/* interactive hover for char options */
 .char-option:hover {
   transform: none;
   background: #999;
 }
 
-/* Menu score removed */
-
-/* responsive adjustments for narrower screens */
 @media (max-width: 980px) {
   .menu-screen .menu-content {
     padding: 28px;
@@ -974,10 +955,9 @@ body {
   }
 }
 
-/* Ensure game wrapper doesn't exceed viewport */
 @media (max-width: 1800px) {
   .game-wrapper {
-    max-width: calc(100vw - 200px);
+    max-width: 100%;
   }
 
   .game-container {
@@ -985,16 +965,15 @@ body {
   }
 }
 
-/* Responsive layout */
 @media (max-width: 1200px) {
   main {
-    grid-template-columns: 220px 1.2fr 220px;
+    grid-template-columns: 260px 1fr 240px;
     gap: 16px;
     padding: 16px;
   }
 
   .info {
-    max-width: 220px;
+    max-width: 260px;
   }
 
   .enemy-select-panel {
@@ -1026,46 +1005,44 @@ body {
   }
 }
 
-/* Better layout for larger screens */
 @media (min-width: 1400px) {
   main {
-    grid-template-columns: 240px 1.2fr 240px;
+    grid-template-columns: 340px 1.2fr 300px;
     max-height: calc(100vh - 100px);
   }
 
   .info {
-    max-width: 240px;
+    max-width: 340px;
   }
 
   .enemy-select-panel {
-    max-width: 240px;
+    max-width: 300px;
   }
 }
 
-/* Make sure score HUD is always visible */
 .score-hud,
 #scoreHUD {
   position: absolute;
-  top: 18px;
-  left: 22px;
+  top: 12px;
+  left: 12px;
   right: auto;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  background: rgba(0, 0, 0, 0.6);
   color: #fff;
-  padding: 10px 14px;
-  border-radius: 14px;
+  padding: 12px 20px;
+  border-radius: 0;
   display: flex;
-  gap: 10px;
+  gap: 16px;
   align-items: center;
   z-index: 120 !important;
   font-weight: 800;
-  box-shadow: 0 6px 22px rgba(8, 12, 30, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  box-shadow: none;
   backdrop-filter: blur(6px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 4px solid #fff;
   pointer-events: auto;
+  cursor:pointer;
 }
 
 
-/* shine effect used on score HUD when added */
 .score-hud.shine {
   animation: shine 520ms ease;
 }
@@ -1086,24 +1063,23 @@ body {
   }
 }
 
-/* Hearts UI */
 .hearts-container {
   position: absolute;
-  top: 18px;
-  right: 22px;
+  top: 12px;
+  right: 12px;
   display: flex;
-  gap: 8px;
+  gap: 12px;
   z-index: 120;
   pointer-events: none;
 }
 
 .heart {
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4444' stroke='%23fff' stroke-width='2'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
-  filter: drop-shadow(2px 2px 0 #000);
+  filter: drop-shadow(4px 4px 0 #000);
 }
 
 .heart.lost {
@@ -1136,3 +1112,122 @@ body {
   border-right-color: #dbdbdb;
   border-bottom-color: #dbdbdb;
 }
+
+.score-label {
+  font-size: 32px;
+  color: #ffd700;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.score-value {
+  font-size: 56px;
+  color: #fff;
+  text-shadow: 4px 4px 0 #000;
+}
+
+.kills-hud {
+  top: 110px !important;
+  left: 18px !important;
+}
+
+@media (max-width: 1024px) {
+  body {
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+    display: block;
+    padding-bottom: 40px;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    max-height: none;
+    width: 96%;
+    margin: 0 auto;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  .game-center {
+    order: 1;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .game-wrapper {
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  .info {
+    order: 2;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 15px;
+    background: rgba(139, 139, 139, 0.9);
+  }
+
+  .enemy-select-panel {
+    order: 3;
+    width: 100%;
+    max-width: 100%;
+    background: rgba(139, 139, 139, 0.9);
+  }
+
+  .menu-content {
+    width: 90%;
+    padding: 30px;
+  }
+
+  .game-title {
+    font-size: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 60px;
+  }
+
+  .score-hud, #scoreHUD {
+    transform: scale(0.75);
+    transform-origin: top left;
+    left: 8px;
+    top: 8px;
+  }
+
+  .hearts-container {
+    transform: scale(0.75);
+    transform-origin: top right;
+    right: 8px;
+    top: 8px;
+  }
+
+  .kills-hud {
+    top: 80px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  header h1 { font-size: 42px; }
+  header p { font-size: 16px; }
+  .game-title { font-size: 50px; }
+
+  .char-select { flex-wrap: wrap; }
+  .char-option { width: 45%; margin-bottom: 10px; }
+  .btn-main { width: 100%; padding: 15px 0; font-size: 24px; }
+
+  #gameOverUI h1, .pause-box h2 { font-size: 50px; }
+  #gameOverUI p, .pause-instruction { font-size: 20px; }
+  .gameover-buttons button { padding: 16px 36px; font-size: 28px; }
+}
+
+@media (max-width: 375px) {
+  .char-option { width: 100%; }
+  .score-hud, #scoreHUD { transform: scale(0.6); }
+  .hearts-container { transform: scale(0.6); }
+} 

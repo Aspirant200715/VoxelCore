@@ -10,7 +10,7 @@ export class Bullet extends Entity {
     this.active = true;
     this.lifeTime = 1.5;
   }
-
+//physics behind bullets hitting
   update(dt) {
     this.x += this.speed * this.direction * dt;
     this.lifeTime -= dt;

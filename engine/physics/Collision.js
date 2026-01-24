@@ -6,12 +6,5 @@ export function aabb(a, b) {
     a.y + a.height > b.y
   );
 }
-// What this does (important, simple)
-// This is AABB collision:
-// Axis-Aligned Bounding Box
-// Rectangles that are not rotated
-// It answers one question only:
-// “Are these two rectangles overlapping?”
-// Returns:
-// true → collision
-// false → no collision
+
+//this file is most important as it contains the logic behind the player hitting the enemies 

@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VoxelCore</title>
+    <title>Somario</title>
+    <link rel="icon" type="image/png" href="giphy.gif" />
     <link
       href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Montserrat:wght@400;700;900&family=Bangers&family=Bungee&family=Righteous&display=swap"
       rel="stylesheet"
@@ -13,15 +14,12 @@
 
   <body>
     <div class="app">
-      <!-- HEADER -->
       <header>
-        <h1>MARIO RUN</h1>
+        <h1>SOMARIO</h1>
         <p>Custom JavaScript Engine with Combat, AI & Collision</p>
       </header>
 
-      <!-- MAIN UI LAYOUT (NON-FULLSCREEN PART) -->
       <main id="mainLayout">
-        <!-- INSTRUCTIONS PANEL - LEFT SIDE -->
         <aside class="info boxed fancy">
           <h2>Controls</h2>
           <ul>
@@ -41,7 +39,6 @@
           </ul>
         </aside>
 
-        <!-- GAME FULLSCREEN LAYER - CENTERED -->
         <div id="game-fullscreen-layer" class="game-center">
           <div class="game-container">
             <div class="game-wrapper large">
@@ -52,27 +49,31 @@
                 tabindex="0"
               ></canvas>
 
-              <!-- SCORE HUD (updated dynamically) -->
               <div id="scoreHUD" class="score-hud">
                 <div class="score-label">Score</div>
                 <div id="scoreValue" class="score-value">0</div>
               </div>
 
-              <!-- FINAL CARD (top-left, shown on game over) -->
+              <div id="killsHUD" class="score-hud kills-hud" style="display: none;">
+                <div class="score-label">Enemies Killed</div>
+                <div id="killsValue" class="score-value">0</div>
+              </div>
+
+
               <div id="finalCard" class="final-card" style="display: none">
                 <div class="final-label">FINAL</div>
                 <div id="finalCardValue" class="final-value">0</div>
               </div>
 
-              <!-- PAUSE OVERLAY -->
+
               <div id="pauseUI" class="overlay-ui" style="display: none">
                 <div class="pause-box">
                       PAUSED
                   <div class="pause-instruction">Press <b>P</b> to resume</div>
                 </div>
               </div>
+              
 
-              <!-- GAME OVER OVERLAY -->
               <div id="gameOverUI">
                 <h1>Game Over</h1>
                 <p>Final Score: <strong id="finalScore">0</strong></p>
@@ -80,7 +81,6 @@
                   <button id="backBtn">Back</button>
                 </div>
               </div>
-              <!-- MENU OVERLAY -->
               <div id="ui-overlay" class="menu-screen">
                 <div class="menu-content">
                   <h1 class="game-title">RUN MARIO RUN</h1>
@@ -117,13 +117,10 @@
                   </div>
                 </div>
               </div>
-              <!-- END MENU OVERLAY -->
             </div>
           </div>
         </div>
-        <!-- END GAME FULLSCREEN LAYER -->
 
-        <!-- ENEMY SELECT - RIGHT SIDE -->
         <div class="enemy-select-panel">
           <h3>ENEMIES</h3>
           <select id="enemyCount">
@@ -135,16 +132,10 @@
         </div>
       </main>
 
-      <!-- FOOTER -->
-      <footer>
-        <span>VoxelCore</span>
-      </footer>
-    </div>
+     
 
-    <!-- GAME LOGIC -->
     <script type="module" src="./game/main.js"></script>
 
-    <!-- UI LOGIC -->
     <script>
       window.selectedHero = "warrior";
 
@@ -154,7 +145,6 @@
           .querySelectorAll(".char-option")
           .forEach((el) => el.classList.remove("selected"));
         document.getElementById("char-" + type).classList.add("selected");
-        // Play select SFX when choosing hero (if available)
         try {
           if (typeof window !== "undefined" && window.sfxSelect) {
             const s = window.sfxSelect.cloneNode();

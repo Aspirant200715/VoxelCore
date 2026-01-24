@@ -18,7 +18,7 @@ export class World {
   }
 
   // REMOVE DEAD ENTITIES
-  this.entities = this.entities.filter(e => e.alive !== false);
+  this.entities = this.entities.filter(e => e.alive !== false);  //very imp line for removing the dead enemies 
 }
 
   render(ctx) {

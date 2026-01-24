@@ -8,10 +8,9 @@ export class Player extends Entity {
     this.solid = true;
     this.type = type;
     this.sprite = null;
-    //SPEED AND JUMP HEIGHT LOGIC
     const stats = {
-      warrior: { speed: 250, jump: -920 }, // Increased jump force for platforming
-      scout: { speed: 300, jump: -940 }, // Increased jump force for platforming
+      warrior: { speed: 250, jump: -920 },
+      scout: { speed: 300, jump: -940 },
     };
 
     const choice = stats[type] || stats.warrior;
@@ -30,7 +29,6 @@ export class Player extends Entity {
     this.alive = true;
     this.isMoving = false;
 
-    // Create DOM element for GIF playback
     this.element = document.createElement("img");
     this.element.className = "player-gif";
     this.element.src =
@@ -43,12 +41,10 @@ export class Player extends Entity {
     this.element.style.zIndex = "10";
     this.element.style.imageRendering = "pixelated";
 
-    // Append to game layer
     const container =
       document.getElementById("game-fullscreen-layer") || document.body;
     container.appendChild(this.element);
 
-    // Load sprite for static rendering (idle state)
     this.sprite = new Image();
     this.sprite.src = this.element.src;
   }
@@ -56,8 +52,8 @@ export class Player extends Entity {
   die() {
     if (!this.alive) return;
     this.alive = false;
-    this.solid = false; // Disable collision to fall through ground
-    this.vy = -600; // Death hop
+    this.solid = false;
+    this.vy = -600;
 
     if (this.element) {
       this.element.style.filter = "grayscale(100%) brightness(50%)";
@@ -83,7 +79,6 @@ export class Player extends Entity {
   }
 
   update(dt) {
-    // track previous vertical position for collision heuristics
     this.prevY = this.y;
 
     this.isMoving = false;
@@ -104,7 +99,6 @@ export class Player extends Entity {
     if (this.alive && jumpRequest && this.isGrounded) {
       this.vy = this.jumpForce;
       this.isGrounded = false;
-      // Play jump sound on actual jump (user gesture already performed when starting run)
       try {
         if (typeof window !== "undefined" && window.sfxJump) {
           const j = window.sfxJump.cloneNode();
@@ -116,7 +110,6 @@ export class Player extends Entity {
     this.vy += this.gravity * dt;
     this.y += this.vy * dt;
 
-    // Shooting on Space
     if (this.shootCooldown > 0) {
       this.shootCooldown -= dt;
     }
@@ -124,22 +117,19 @@ export class Player extends Entity {
     if (this.alive && Keyboard.isDown("Space") && this.shootCooldown <= 0) {
       this.shootRequested = true;
       this.shootCooldown = 0.25;
-      // Play shoot sound
       try {
         if (typeof window !== "undefined" && window.sfxAttack) {
           const a = window.sfxAttack.cloneNode();
-          a.playbackRate = 1.5; // Higher pitch for laser shot
+          a.playbackRate = 1.5;
           a.play().catch(() => {});
         }
       } catch (err) {}
     }
 
-    // Bounds
     if (this.x < 0) this.x = 0;
   }
 
   render(ctx) {
-    // Calculate screen position based on camera transform
     const t = ctx.getTransform();
     const canvas = ctx.canvas;
     const rect = canvas.getBoundingClientRect();
@@ -147,15 +137,12 @@ export class Player extends Entity {
     const scaleX = rect.width / canvas.width;
     const scaleY = rect.height / canvas.height;
 
-    // Visual dimensions
     const targetRenderWidth = 104;
     const targetRenderHeight = 99;
 
-    // Calculate world position for the sprite (centered over hitbox)
     const worldDrawX = this.x - (targetRenderWidth - this.width) / 2;
     const worldDrawY = this.y - (targetRenderHeight - this.height) + 6;
 
-    // If player is alive and not moving, draw static frame to canvas (pauses animation)
     if (this.alive && !this.isMoving) {
       this.element.style.display = "none";
       ctx.save();
@@ -185,11 +172,9 @@ export class Player extends Entity {
       return;
     }
 
-    // Transform to screen coordinates
     const screenX = worldDrawX * t.a + t.e;
     const screenY = worldDrawY * t.d + t.f;
 
-    // Apply CSS scaling
     const finalX = rect.left + screenX * scaleX;
     const finalY = rect.top + screenY * scaleY;
     const finalW = targetRenderWidth * scaleX;

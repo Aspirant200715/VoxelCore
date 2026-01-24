@@ -13,20 +13,16 @@ class Brick extends Entity {
     this.solid = true;
   }
   render(ctx) {
-    // Minecraft Dirt Block
-    ctx.fillStyle = "#795548"; // Dirt brown
+    ctx.fillStyle = "#795548";
     ctx.fillRect(this.x, this.y, this.width, this.height);
 
-    // Grass top
-    ctx.fillStyle = "#4CAF50"; // Grass green
+    ctx.fillStyle = "#4CAF50";
     ctx.fillRect(this.x, this.y, this.width, 18);
 
-    // Grass overhang (pixelated style)
     ctx.fillRect(this.x + 6, this.y + 18, 6, 6);
     ctx.fillRect(this.x + 24, this.y + 18, 6, 9);
     ctx.fillRect(this.x + 42, this.y + 18, 6, 5);
 
-    // Dirt texture details
     ctx.fillStyle = "rgba(0,0,0,0.15)";
     ctx.fillRect(this.x + 12, this.y + 36, 6, 6);
     ctx.fillRect(this.x + 36, this.y + 48, 6, 6);
@@ -35,7 +31,7 @@ class Brick extends Entity {
 
 class Lava extends Entity {
   constructor(x, y) {
-    super(x, y, 60, 600); // Deep lava
+    super(x, y, 60, 600);
     this.solid = false;
     this.bubbleTimer = Math.random() * 100;
   }
@@ -43,11 +39,10 @@ class Lava extends Entity {
     this.bubbleTimer += dt;
   }
   render(ctx) {
-    ctx.fillStyle = "#cf1020"; // Lava red
+    ctx.fillStyle = "#cf1020";
     ctx.fillRect(this.x, this.y, this.width, this.height);
 
-    // Bubbles/Texture
-    ctx.fillStyle = "#ff4500"; // Orange-red
+    ctx.fillStyle = "#ff4500";
     const y1 = Math.sin(this.bubbleTimer * 3) * 6;
     const y2 = Math.cos(this.bubbleTimer * 4) * 6;
     ctx.fillRect(this.x + 5, this.y + 10 + y1, 10, 10);
@@ -68,7 +63,6 @@ class Cloud extends Entity {
   update(dt) {
     this.x += this.speed * dt;
 
-    // Prefer wrapping across the provided world width so clouds persist across the level
     const canvasEl =
       typeof document !== "undefined"
         ? document.getElementById("gameCanvas")
@@ -84,18 +78,15 @@ class Cloud extends Entity {
 
   render(ctx) {
     ctx.fillStyle = "#fff";
-    // Blocky cloud
     ctx.fillRect(this.x, this.y, 80, 24);
     ctx.fillRect(this.x + 16, this.y - 16, 48, 16);
   }
 }
 
-// Simple bird decoration that flies across the screen
-
 class Bird extends Entity {
   constructor(x, y, speed, worldWidth) {
     super(x, y, 28, 14);
-    this.speed = speed; // positive moves right, negative moves left
+    this.speed = speed;
     this.tag = "decoration";
     this.solid = false;
     this.wingTimer = 0;
@@ -121,7 +112,6 @@ class Bird extends Entity {
   render(ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
-    // simple flapping wings using lines
     ctx.strokeStyle = "#222";
     ctx.lineWidth = 2;
     const flap = Math.sin(this.wingTimer) * 6;
@@ -135,7 +125,6 @@ class Bird extends Entity {
   }
 }
 
-// Simple grass tuft decoration placed along the ground
 class Grass extends Entity {
   constructor(x, y) {
     super(x, y, 12, 18);
@@ -145,7 +134,6 @@ class Grass extends Entity {
 
   render(ctx) {
     ctx.fillStyle = "#388E3C";
-    // Blocky grass blades
     ctx.fillRect(this.x + 2, this.y + 8, 4, 10);
     ctx.fillRect(this.x + 8, this.y + 4, 4, 14);
   }
@@ -159,11 +147,9 @@ export class TestScene extends Scene {
     this.deathTimer = 0;
     this.waitingForDeath = false;
     this.lives = 3;
-    // level width must be known so decorations can wrap across the whole level
-    this.levelWidth = 12000; // Bigger level to fit 20 enemies
+    this.levelWidth = 12000;
     this.levelEndX = this.levelWidth - 200;
-
-    // Add clouds with better distribution across full width (pass world width)
+//clouds
     this.world.add(new Cloud(100, 50, 20, this.levelWidth));
     this.world.add(new Cloud(400, 80, 15, this.levelWidth));
     this.world.add(new Cloud(700, 40, 25, this.levelWidth));
@@ -172,29 +158,22 @@ export class TestScene extends Scene {
     this.world.add(new Cloud(1900, 50, 16, this.levelWidth));
     this.world.add(new Cloud(2300, 70, 20, this.levelWidth));
 
-    // Start player at a position that's visible from the beginning
-    // Position player so they're visible in the initial viewport
-    this.startX = 100; // Start a bit further right so camera shows more of the level
-    this.startY = 440; // Keep same Y position
+    this.startX = 100;
+    this.startY = 440;
     this.player = new Player(this.startX, this.startY, window.selectedHero);
     this.world.add(this.player);
 
-    // Generate Floor with Pits
     for (let i = 0; i < this.levelWidth / 60; i++) {
-      // Create gaps in the floor (pits)
       if (i > 15 && i % 25 > 18) {
-        this.world.add(new Lava(i * 60, 670)); // Add lava in the pit
+        this.world.add(new Lava(i * 60, 670));
         continue;
       }
       this.world.add(new Brick(i * 60, 600));
-      this.world.add(new Lava(i * 60, 670)); // Add lava below the brick too
+      this.world.add(new Lava(i * 60, 670));
     }
 
-    // Helper block for the second gap so player can jump over
     this.world.add(new Brick(2790, 600));
 
-    // Fixed Y lanes (DO NOT GUESS VALUES)
-    //Position of each and every block and brick
     const GROUND_Y = 600;
     const LOW = 560;
     const MID = 510;
@@ -212,15 +191,13 @@ export class TestScene extends Scene {
     this.world.add(new Brick(1900, MID, 120, 30));
     this.world.add(new Brick(2200, HIGH, 120, 30));
 
-    // Extended Level Platforms
     for (let x = 3000; x < this.levelWidth - 500; x += 800) {
       this.world.add(new Brick(x, LOW, 120, 30));
       this.world.add(new Brick(x + 200, MID, 120, 30));
       this.world.add(new Brick(x + 400, HIGH, 120, 30));
       this.world.add(new Brick(x + 600, MID, 120, 30));
     }
-
-    // Spawn enemies based on dropdown value
+//enemy position handling 
     const enemyCount = window.enemyCount || 4;
     const enemyPositions = [
       { x: 420, y: LOW - 40 },
@@ -233,7 +210,6 @@ export class TestScene extends Scene {
       { x: 1350, y: LOW - 40 },
     ];
 
-    // Add more enemy spawn points for the extended level
     for (let x = 3000; x < this.levelWidth - 500; x += 800) {
       enemyPositions.push({ x: x + 20, y: LOW - 40 });
       enemyPositions.push({ x: x + 420, y: HIGH - 40 });
@@ -244,13 +220,10 @@ export class TestScene extends Scene {
       this.world.add(new Enemy(pos.x, pos.y));
     }
 
-    // Add grass along the level base for visual realism
     for (let gx = 0; gx < this.levelWidth; gx += 54) {
-      // place grass slightly above the ground bricks so it reads in front
       this.world.add(new Grass(gx + 4, GROUND_Y - 18));
     }
 
-    // Add birds that fly across the scene at different heights and speeds
     const birdY = [60, 90, 120, 50, 140];
     for (let i = 0; i < 6; i++) {
       const bx = Math.random() * this.levelWidth;
@@ -266,17 +239,15 @@ export class TestScene extends Scene {
   update(dt) {
     if (!this.gameStarted) {
       this.gameStarted = true;
-      return; // skip first frame checks
+      return;
     }
 
     if (this.gameOver) {
-      // Stop all movement when game over
       this.player.vy = 0;
       this.player.speed = 0;
       return;
     }
 
-    // Handle Shooting
     if (this.player.shootRequested) {
       const b = new Bullet(
         this.player.x + (this.player.facing === 1 ? this.player.width : -20),
@@ -289,20 +260,17 @@ export class TestScene extends Scene {
 
     this.world.update(dt, this.player);
 
-    // Force update player if dead (in case World removes/skips dead entities)
     if (!this.player.alive) {
       this.player.update(dt);
     }
     this.player.isGrounded = false;
 
-    // Cleanup dead bullets and enemies
     this.world.entities = this.world.entities.filter((e) => {
       if (e.tag === "bullet" && !e.active) return false;
       if (e.tag === "enemy" && !e.alive) return false;
       return true;
     });
 
-    // Only resolve collisions if player is alive (allows falling through ground on death)
     if (this.player.alive) {
       const entities = this.world.entities;
       const pairs = CollisionSystem.getPairs(entities);
@@ -339,7 +307,6 @@ export class TestScene extends Scene {
       this.player.die();
     }
 
-    // Check for player death (fallen below lava level)
     if (!this.player.alive && this.player.y > 800 && !this.waitingForDeath) {
       this.waitingForDeath = true;
       this.deathTimer = 0.5;
@@ -354,7 +321,6 @@ export class TestScene extends Scene {
 
         if (this.lives > 0) {
           this.player.respawn(this.startX, this.startY);
-          // Re-add player to world if it was removed
           if (!this.world.entities.includes(this.player)) {
             this.world.add(this.player);
           }
@@ -368,17 +334,13 @@ export class TestScene extends Scene {
   }
 
   render(ctx) {
-    // Draw background
-    // Minecraft Sky Gradient
     const grad = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-    grad.addColorStop(0, "#87CEEB"); // Sky blue
-    grad.addColorStop(1, "#B3E5FC"); // Horizon
+    grad.addColorStop(0, "#87CEEB");
+    grad.addColorStop(1, "#B3E5FC");
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.save();
 
-    // Camera follows player - keeps player centered on screen
-    // But don't move camera until player has moved forward enough
     const playerCenterX = this.player.x + this.player.width / 2;
     const canvasCenterX = ctx.canvas.width / 2;
     const cameraX = Math.max(
@@ -388,24 +350,16 @@ export class TestScene extends Scene {
         this.levelWidth - ctx.canvas.width,
       ),
     );
-    const cameraY = 0; // No vertical camera movement
+    const cameraY = 0;
 
     ctx.translate(-cameraX, -cameraY);
 
-    // Render all world entities
     this.world.render(ctx);
 
-    // Force render player if dead (in case World removes/skips dead entities)
     if (!this.player.alive) {
       this.player.render(ctx);
     }
 
     ctx.restore();
-
-    // NOTE: HTML overlay handles the Game Over UI now.
-    // We intentionally do not draw an in-canvas Game Over screen
-    // to avoid duplicate overlays.
   }
-
-  // drawEndScreen removed: use the HTML overlay (`#gameOverUI`) instead.
 }

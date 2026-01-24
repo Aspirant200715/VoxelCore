@@ -1,26 +1,30 @@
 import { Keyboard } from "../engine/input/Keyboard.js";
 import { TestScene } from "./TestScene.js";
+
 const gameOverUI = document.getElementById("gameOverUI");
 const pauseUI = document.getElementById("pauseUI");
 const backBtn = document.getElementById("backBtn");
-
 const canvas = document.getElementById("gameCanvas");
 const overlay = document.getElementById("ui-overlay");
 const startBtn = document.getElementById("startBtn");
 const fsLayer = document.getElementById("game-fullscreen-layer");
+const gameWrapper = document.querySelector(".game-wrapper");
 const ctx = canvas.getContext("2d");
 const scoreValueEl = document.getElementById("scoreValue");
 const scoreHUD = document.getElementById("scoreHUD");
+const killsValueEl = document.getElementById("killsValue");
+const killsHUD = document.getElementById("killsHUD");
 const finalCard = document.getElementById("finalCard");
 const finalCardValue = document.getElementById("finalCardValue");
 const menuScoreValue = document.getElementById("menuScoreValue");
-// ensure menu/outside score reflects persisted value on load
-if (menuScoreValue)
+
+
+if (menuScoreValue){
   menuScoreValue.textContent = String(
     Number(localStorage.getItem("mr_score") || 0),
   );
+}
 
-// --- Inject Enemy Options ---
 const enemySelectEl = document.getElementById("enemyCount");
 if (enemySelectEl) {
   enemySelectEl.innerHTML = "";
@@ -33,11 +37,12 @@ if (enemySelectEl) {
   });
 }
 
-// --- Hearts UI ---
+
+
 const heartsContainer = document.createElement("div");
 heartsContainer.className = "hearts-container";
 heartsContainer.id = "heartsContainer";
-if (fsLayer) fsLayer.appendChild(heartsContainer);
+if (gameWrapper) gameWrapper.appendChild(heartsContainer);
 else document.body.appendChild(heartsContainer);
 
 window.updateLives = function (current, max) {
@@ -49,8 +54,7 @@ window.updateLives = function (current, max) {
   }
 };
 
-// --- Inject Game Instructions ---
-//game ui dom
+
 const infoPanel = document.querySelector(".info");
 if (infoPanel) {
   infoPanel.innerHTML = `
@@ -60,6 +64,7 @@ if (infoPanel) {
       <li><b>Jump:</b> Up(^) / W</li>
       <li><b>Shoot:</b> Spacebar</li>
       <li><b>Pause:</b> P</li>
+      <li><b>Esc:</b> Leave</li>
     </ul>
     <h2>RULES</h2>
     <ul>
@@ -67,15 +72,17 @@ if (infoPanel) {
       <li>Touching an enemy on head kills you.</li>
       <li>Falling in lava kills you.</li>
       <li>You have 3 lives.</li>
+      <li>Coming in between 2 enemies kills you.</li>
     </ul>
   `;
 }
 
-// --- Intro Music ---
+
 const bgMusic = new Audio("cottagecore-17463.mp3");
 bgMusic.loop = true;
 bgMusic.volume = 0.5;
-let musicUserEnabled = false; //by default closed 
+bgMusic.preload = "auto";
+let musicUserEnabled = false;
 
 const musicBtn = document.createElement("button");
 musicBtn.id = "musicBtn";
@@ -84,10 +91,13 @@ if (overlay) overlay.appendChild(musicBtn);
 
 musicBtn.addEventListener("click", () => {
   if (bgMusic.paused) {
-    bgMusic.play().then(() => {
-      musicUserEnabled = true;
-      musicBtn.textContent = "🔊 Music ON";
-    }).catch((e) => console.warn(e));
+    bgMusic
+      .play()
+      .then(() => {
+        musicUserEnabled = true;
+        musicBtn.textContent = "🔊 Music ON";
+      })
+      .catch((e) => console.warn(e));
   } else {
     bgMusic.pause();
     musicUserEnabled = false;
@@ -95,9 +105,84 @@ musicBtn.addEventListener("click", () => {
   }
 });
 
-// --- Web Audio API for Low Latency SFX ---
+//Webkit Api
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
+
+const resumeAudio = () => {
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume().catch((e) => console.warn(e));
+  }
+};
+window.addEventListener("click", resumeAudio, { once: true });
+window.addEventListener("keydown", resumeAudio, { once: true });
+window.addEventListener("touchstart", resumeAudio, { once: true });
+
+if (overlay) overlay.style.display = "none";
+
+const splash = document.createElement("div");
+splash.style.position = "fixed";
+splash.style.inset = "0";
+splash.style.background = "linear-gradient(135deg, #767571 0%, #033c08 100%)";
+splash.style.display = "flex";
+splash.style.flexDirection = "column";
+splash.style.justifyContent = "center";
+splash.style.alignItems = "center";
+splash.style.zIndex = "100000";
+splash.style.color = "#fff";
+splash.style.fontFamily = "'VT323', monospace";
+
+const splashTitle = document.createElement("h1");
+splashTitle.textContent = "Game Set Go";
+splashTitle.style.fontSize = "clamp(70px, 30vw, 220px)";
+splashTitle.style.marginBottom = "20px";
+splashTitle.style.textTransform = "uppercase";
+splashTitle.style.textShadow = "6px 6px 0 #000";
+splashTitle.style.animation = "bounce 0.6s infinite alternate";
+
+const splashText = document.createElement("p");
+splashText.textContent = "Press ENTER to Start";
+splashText.style.fontSize = "clamp(24px, 4vw, 60px)";
+splashText.style.textShadow = "2px 2px 0 #000";
+splashText.style.animation = "blink 1s infinite";
+
+const splashStyle = document.createElement("style");
+splashStyle.textContent = `
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px); } }
+`;
+
+
+document.head.appendChild(splashStyle);
+splash.appendChild(splashTitle);
+splash.appendChild(splashText);
+document.body.appendChild(splash);
+
+const handleSplashEnter = async (e) => {
+  if (e.key === "Enter") {
+    window.removeEventListener("keydown", handleSplashEnter);
+    splash.style.transition = "opacity 0.5s ease";
+    splash.style.opacity = "0";
+    setTimeout(() => splash.remove(), 500);
+
+
+    if (overlay) overlay.style.display = "flex";
+    try {
+      await bgMusic.play();
+      musicUserEnabled = true;
+      if (musicBtn) musicBtn.textContent = "🔊 Music ON";
+    } catch (err) {
+      console.warn("Auto-play blocked:", err);
+    }
+    
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume().catch((e) => console.warn(e));
+    }
+  }
+};
+window.addEventListener("keydown", handleSplashEnter);
+
+
 
 class SynthSound {
   constructor(freq, duration, volume) {
@@ -143,39 +228,41 @@ function _makeAudioElement(id, freq, duration, volume) {
   return new SynthSound(freq, duration, volume);
 }
 
-// Create the main SFX elements
-//Sound effcts added via Dom
+//Game sounds Sfxhit- one sound different frequencies 
 window.sfxHit = _makeAudioElement("sfxHit", 250, 0.1, 0.8);
 window.sfxKill = _makeAudioElement("sfxKill", 520, 0.18, 0.75);
 window.sfxPoints = _makeAudioElement("sfxPoints", 1500, 0.2, 0.7);
 window.sfxJump = _makeAudioElement("sfxJump", 900, 0.09, 0.6);
-// Attack sound (Space) — distinct from jump
 window.sfxAttack = _makeAudioElement("sfxAttack", 1300, 0.07, 0.7);
 window.sfxPlayerDeath = _makeAudioElement("sfxPlayerDeath", 220, 0.6, 0.85);
-// Game over sound (distinct, solemn chime)
 window.sfxGameOver = _makeAudioElement("sfxGameOver", 330, 0.9, 0.85);
-// Start/run sound (played when PLAY is clicked)
 window.sfxStart = _makeAudioElement("sfxStart", 1800, 0.12, 0.75);
-// Back to menu sound (distinct click)
 window.sfxBack = _makeAudioElement("sfxBack", 600, 0.12, 0.7);
-// Selection sound for character options
 window.sfxSelect = _makeAudioElement("sfxSelect", 880, 0.1, 0.6);
 
-// Initialize score from localStorage
 let score = Number(localStorage.getItem("mr_score") || 0);
 if (scoreValueEl) scoreValueEl.textContent = score;
 
+let kills = 0;
+
+window.addKill = function (count = 1) {
+  kills += count;
+  if (killsValueEl) {
+    killsValueEl.textContent = kills;
+    if (killsHUD) killsHUD.classList.add("pulse");
+    setTimeout(() => killsHUD && killsHUD.classList.remove("pulse"), 220);
+  }
+};
+
+//Final Score 
 window.addScore = function (points) {
   const prev = Number(score || 0);
   score = prev + Number(points);
   localStorage.setItem("mr_score", score);
-  // update outside/menu score display as well
   try {
     if (menuScoreValue) menuScoreValue.textContent = String(score);
   } catch (e) {}
   if (scoreValueEl) {
-    // Update displayed value and trigger a pulse animation
-    // animate numeric change for a smoother feel
     animateNumber(scoreValueEl, prev, score, 360);
     if (scoreHUD) {
       scoreHUD.classList.add("pulse");
@@ -183,12 +270,10 @@ window.addScore = function (points) {
       setTimeout(() => scoreHUD.classList.remove("pulse"), 220);
       setTimeout(() => scoreHUD.classList.remove("shine"), 520);
 
-      // Floating +points popup
       const popup = document.createElement("div");
       popup.className = "score-popup";
       popup.textContent = ">+" + Number(points);
       scoreHUD.appendChild(popup);
-      // Allow the browser to paint then show
       requestAnimationFrame(() => popup.classList.add("show"));
       setTimeout(() => {
         popup.classList.remove("show");
@@ -196,7 +281,6 @@ window.addScore = function (points) {
       }, 700);
     }
   }
-  // Play points-added chime when points were given
   try {
     if (typeof window !== "undefined" && window.sfxPoints) {
       const p = window.sfxPoints.cloneNode();
@@ -205,7 +289,6 @@ window.addScore = function (points) {
   } catch (e) {}
 };
 
-// Smoothly animate a number from `from` to `to` in `el` over `duration` ms
 function animateNumber(el, from, to, duration = 300) {
   if (!el) return;
   const start = performance.now();
@@ -218,7 +301,6 @@ function animateNumber(el, from, to, duration = 300) {
   requestAnimationFrame(tick);
 }
 
-// Make the HUD clickable: allow manual reset of score
 if (scoreHUD) {
   scoreHUD.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -229,12 +311,12 @@ if (scoreHUD) {
         if (scoreValueEl) scoreValueEl.textContent = 0;
       }
     } catch (err) {
-      /* ignore */
+      
     }
   });
 }
 
-Keyboard.init(); // Initialize keyboard input system
+Keyboard.init();
 
 let lastTime = 0;
 let isRunning = false;
@@ -247,7 +329,6 @@ gameOverUI.hidden = true;
 startBtn.addEventListener("click", async () => {
   bgMusic.pause();
   if (audioCtx.state === "suspended") await audioCtx.resume();
-  // Play start sound immediately on the user gesture
   try {
     if (typeof window !== "undefined" && window.sfxStart) {
       const s = window.sfxStart.cloneNode();
@@ -255,31 +336,27 @@ startBtn.addEventListener("click", async () => {
     }
   } catch (err) {}
   if (autoRedirectTimer) clearTimeout(autoRedirectTimer);
-  // 1️⃣ Read enemy count
   const enemySelect = document.getElementById("enemyCount");
   window.enemyCount = enemySelect ? Number(enemySelect.value) : 4;
 
-  // Cleanup any existing player GIFs from previous runs
   document.querySelectorAll(".player-gif").forEach((el) => el.remove());
 
-  // 2️⃣ Fullscreen ONLY game layer
-  // 2️⃣ Hide menu overlay immediately so user sees game area
   overlay.style.display = "none";
 
-  // Ensure UI overlays are inside the fullscreen element so they are visible
-  if (fsLayer) {
-    [gameOverUI, pauseUI, scoreHUD, finalCard, heartsContainer].forEach(
+  if (fsLayer && gameWrapper) {
+    [gameOverUI, pauseUI, finalCard].forEach(
       (el) => {
         if (el && el.parentElement !== fsLayer) fsLayer.appendChild(el);
       },
     );
+    if (scoreHUD && scoreHUD.parentElement !== gameWrapper) gameWrapper.appendChild(scoreHUD);
+    if (killsHUD && killsHUD.parentElement !== gameWrapper) gameWrapper.appendChild(killsHUD);
+    if (heartsContainer && heartsContainer.parentElement !== gameWrapper) gameWrapper.appendChild(heartsContainer);
   }
 
-  // 3️⃣ Try entering fullscreen for the game layer but continue if it fails
   try {
     if (fsLayer.requestFullscreen) await fsLayer.requestFullscreen();
   } catch (err) {
-    // fullscreen may fail in some browsers or contexts; continue anyway
     console.warn("requestFullscreen failed:", err);
   }
 
@@ -289,25 +366,24 @@ startBtn.addEventListener("click", async () => {
   pauseUI.style.display = "none";
   if (finalCard) finalCard.style.display = "none";
   if (scoreHUD) scoreHUD.style.display = "flex";
+  if (killsHUD) killsHUD.style.display = "flex";
   if (heartsContainer) heartsContainer.style.display = "flex";
-  window.updateLives(3, 3); // Reset lives
+  window.updateLives(3, 3);
   gameOverHandled = false;
 
-  // 4️⃣ Create scene
-  // reset score at start of a new run
   score = 0;
   localStorage.setItem("mr_score", score);
   if (scoreValueEl) scoreValueEl.textContent = score;
+  kills = 0;
+  if (killsValueEl) killsValueEl.textContent = kills;
 
   scene = new TestScene();
   isRunning = true;
   isPaused = false;
 
-  // 5️⃣ Focus canvas for keyboard
   canvas.focus();
-
+//important test 
   lastTime = performance.now();
-  // debug: log canvas and initial player position
   try {
     console.log("[DEBUG] canvas size:", canvas.width, canvas.height);
     if (scene && scene.player)
@@ -322,61 +398,54 @@ function gameLoop(time) {
   const dt = (time - lastTime) / 1000;
   lastTime = time;
 
-  // 🔧 PAUSE TOGGLE (P KEY)
   if (Keyboard.isDown("KeyP")) {
     isPaused = !isPaused;
     pauseUI.style.display = isPaused ? "flex" : "none";
-    Keyboard.keys["KeyP"] = false; // Prevent repeated toggles
+    Keyboard.keys["KeyP"] = false;
   }
 
-  // Only update if not paused
   if (!isPaused) {
     scene.update(dt);
   }
 
   scene.render(ctx);
 
-  // 🔴 GAME OVER CHECK (Handle only once)
   if (scene.isGameOver() && !gameOverHandled) {
     gameOverHandled = true;
     isRunning = false;
 
-    // Update Game Over Text based on result
     const title = gameOverUI.querySelector("h1");
     const msg = gameOverUI.querySelector("p");
+    const finalScoreText = `<br><span style="font-size: 0.8em; color: #ffd966">Final Score: ${Number(score || 0)}</span>`;
     if (scene.player && !scene.player.alive) {
       if (title) {
         title.textContent = "GAME OVER";
         title.style.color = "#ff4444";
       }
-      if (msg) msg.textContent = "You died!";
+      if (msg) msg.innerHTML = "You died!" + finalScoreText;
     } else {
       if (title) {
         title.textContent = "VICTORY!";
         title.style.color = "#44ff44";
       }
-      if (msg) msg.textContent = "You defeated all enemies!";
+      if (msg) msg.innerHTML = "You defeated all enemies!" + finalScoreText;
     }
 
-    // Play game-over sound once
     try {
       if (typeof window !== "undefined" && window.sfxGameOver) {
         const g = window.sfxGameOver.cloneNode();
         g.play().catch(() => {});
       }
     } catch (err) {}
-    // Show final score in the overlay
     try {
       const finalEl = document.getElementById("finalScore");
       if (finalEl) finalEl.textContent = Number(score || 0);
     } catch (e) {}
 
-    // also update the top-left final card if present
     try {
       if (finalCard && finalCardValue) {
         finalCardValue.textContent = Number(score || 0);
         finalCard.style.display = "flex";
-        // animate briefly
         finalCard.classList.remove("pop");
         requestAnimationFrame(() => finalCard.classList.add("pop"));
       }
@@ -385,7 +454,6 @@ function gameLoop(time) {
     gameOverUI.style.display = "flex";
     pauseUI.style.display = "none";
 
-    // Auto redirect to home after 10 seconds
     if (autoRedirectTimer) clearTimeout(autoRedirectTimer);
     autoRedirectTimer = setTimeout(() => {
       if (backBtn) backBtn.click();
@@ -393,14 +461,13 @@ function gameLoop(time) {
     return;
   }
 
-  requestAnimationFrame(gameLoop);
+  requestAnimationFrame(gameLoop); //requests the game to start over again
 }
 backBtn.addEventListener("click", async () => {
   if (musicUserEnabled) {
     bgMusic.play().catch(() => {});
   }
   if (autoRedirectTimer) clearTimeout(autoRedirectTimer);
-  // play a distinct back-to-menu sound on click
   try {
     if (typeof window !== "undefined" && window.sfxBack) {
       const b = window.sfxBack.cloneNode();
@@ -408,34 +475,28 @@ backBtn.addEventListener("click", async () => {
     }
   } catch (err) {}
 
-  // Cleanup player GIFs
   document.querySelectorAll(".player-gif").forEach((el) => el.remove());
 
-  // 1️⃣ Exit fullscreen
   gameOverUI.style.display = "none";
   if (finalCard) finalCard.style.display = "none";
   if (heartsContainer) heartsContainer.style.display = "none";
+  if (killsHUD) killsHUD.style.display = "none";
   if (document.fullscreenElement) {
     await document.exitFullscreen();
   }
 
-  // 2️⃣ Reset flags
   isRunning = false;
   isPaused = false;
   scene = null;
   gameOverHandled = false;
 
-  // 3️⃣ Show menu again
   overlay.style.display = "flex";
 });
 
-// Reload the page when leaving fullscreen so the scorecard resets to default
-// This ensures that if the user presses ESC to exit fullscreen, the HUD and
-// localStorage-backed score are reset to the menu state.
+//full screen change redirects to mario screen 
 document.addEventListener("fullscreenchange", () => {
   if (!document.fullscreenElement) {
     if (autoRedirectTimer) clearTimeout(autoRedirectTimer);
-    // Only reload when a run is active; otherwise just clear the last score
     if (isRunning) {
       try {
         window.location.reload();
@@ -445,7 +506,6 @@ document.addEventListener("fullscreenchange", () => {
         overlay.style.display = "flex";
       }
     } else {
-      // Not running: clear score and show menu
       localStorage.setItem("mr_score", 0);
       if (scoreValueEl) scoreValueEl.textContent = 0;
       overlay.style.display = "flex";

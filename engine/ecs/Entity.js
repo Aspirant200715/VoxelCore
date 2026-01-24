@@ -6,7 +6,7 @@ export class Entity {
     this.height = height;
     this.tag = "entity";
     this.alive = true;
-    this.solid = false;     // for collision purposes
+    this.solid = false;
   }
   update(dt) {}
   render(ctx) {}

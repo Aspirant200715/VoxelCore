@@ -26,10 +26,8 @@ export class Enemy extends Entity {
   }
 
   update(dt) {
-    // Only update if alive
     if (!this.alive) return;
 
-    // Random movement logic
     this.moveTimer -= dt;
     if (this.moveTimer <= 0) {
       this.moveTimer = Math.random() * 2 + 0.5; // Change direction every 0.5-2.5s
@@ -42,20 +40,20 @@ export class Enemy extends Entity {
     this.vx = this.direction * 100; // Move speed
     this.x += this.vx * dt;
   }
-  //render command
+
   render(ctx) {
-    // Retro Robot / Casino Chip Enemy
+    
     ctx.save();
 
     // Body
-    ctx.fillStyle = "#d9004c"; // Dark pink/red
-    ctx.strokeStyle = "#ff00de"; // Neon pink
+    ctx.fillStyle = "#d9004c"; 
+    ctx.strokeStyle = "#ff00de"; 
     ctx.lineWidth = 4;
     ctx.fillRect(this.x, this.y, this.width, this.height);
     ctx.strokeRect(this.x, this.y, this.width, this.height);
 
     // Eyes
-    ctx.fillStyle = "#00eaff"; // Cyan eyes
+    ctx.fillStyle = "#00eaff"; 
     ctx.shadowColor = "#00eaff";
     ctx.shadowBlur = 10;
     ctx.fillRect(this.x + 24, this.y + 36, 24, 24);
